@@ -1,11 +1,14 @@
 using System;
 using UnityEngine;
 using UnityEngine.Rendering;
+using UnityEngine.SocialPlatforms.Impl;
 using UnityEngine.UI;
 
 [RequireComponent (typeof(Rigidbody2D))]
 public class dudler : MonoBehaviour
 {
+   public EndScreenManager endScreenManager;
+
     float brzinaKretanja = 10f;
 
     float kretanje = 0;
@@ -18,6 +21,7 @@ public class dudler : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        endScreenManager = GameObject.FindGameObjectWithTag("krajMenadzer").GetComponent<EndScreenManager>();
         rb = GetComponent<Rigidbody2D>();
     }
 
@@ -42,6 +46,11 @@ public class dudler : MonoBehaviour
             topScore = transform.position.y;
 
         scoreText.text = "Score: " + MathF.Round(topScore).ToString();
+
+        if (transform.position.y < -10)
+        {
+            EndGame();
+        }
     }
 
     private void FixedUpdate()
@@ -49,5 +58,11 @@ public class dudler : MonoBehaviour
         Vector2 velocity = rb.velocity;
         velocity.x = kretanje;
         rb.velocity = velocity;
+    }
+
+    void EndGame()
+    {
+        endScreenManager.ShowEndScreen(MathF.Round(topScore).ToString());
+        
     }
 }
